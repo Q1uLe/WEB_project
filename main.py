@@ -2,18 +2,27 @@ from data import db_session
 
 
 from flask import Flask, render_template
-from flask_login import LoginManager
+# from flask_login import LoginManager
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
-login_manager = LoginManager()
-login_manager.init_app(app)
+# login_manager = LoginManager()
+# login_manager.init_app(app)
 
 
 @app.route('/')
-@app.route('/index')
-def index():
-    return render_template('main_page.html')
+@app.route('/recipes')
+@app.route('/recipes/<page>')
+@app.route('/recipes/<page>/<request>')
+def index(page='', request=''):
+    param = {'page': page, 'request': request}
+    return render_template('index.html', **param)
+
+
+@app.route('/new_recipe')
+def new_recipe():
+    return render_template('new_recipe.html')
 
 
 if __name__ == '__main__':

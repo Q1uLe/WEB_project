@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block style %}{% endblock %}
+    <title>MyRec</title>
+</head>
+<body>
+    <div class="menu-bar">
+        <div class="menu">
+            <div class="logo-image">
+                <img src="/static/Diablo.jpg" width="100px" height="100px" class="logo" alt="logo">
+            </div>
+
+            <div class="icon-image">
+                <img src="/static/Diablo.jpg" width="100px" height="100px" class="icon" alt="avatar">
+            </div>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <div class="add-new-recipe-button">
+        <button class="add-recipe-button" onclick="location.href='/new_recipe'">
+            +
+        </button>
+    </div>
+</body>
+</html>

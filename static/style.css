@@ -1,20 +1,95 @@
-body{
-    background-color: #FFE384
+body
+{
+    background: darkslateblue;
+    overflow-y: hidden;
 }
 
-header{
-    height: 100px;
-    color: orange;
+.logo
+{
+    border-radius: 50%;
 }
-button {
-    background-color: #4CAF50; /* Green */
+.icon
+{
+    border-radius: 50%;
+}
+
+.menu-bar
+{
+    position: fixed;
+}
+
+.menu
+{
+    border: 1px solid black;
+    position: relative;
+    display: flex;
+    width: 100vw;
+    right: 10px;
+    height: 200px;
+    background: slateblue;
+}
+
+.logo-image
+{
+    position: absolute;
+    left: 5%;
+    top: 40%;
+    bottom: 40%;
+    transform: translate(-50%, -50%);
+}
+
+.icon-image
+{
+    position: absolute;
+    left: 95%;
+    top: 40%;
+    bottom: 40%;
+    transform: translate(-50%, -50%);
+}
+
+.content-page
+{
+    background: slateblue;
+    top: 100%;
+    position: absolute;
+    width: 1000px;
+    height: 78vw;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.content-title
+{
+    width: 400px;
+    position: absolute;
+}
+
+.content-page-text
+{
+    width: 400px;
+    position: absolute;
+    font-size: 45px;
+    right: 40%;
+    left: 30%;
+    transform: translate(50%, 50%);
+}
+
+.add-new-recipe-button
+{
+    position: absolute;
+    left: 90%;
+    background: black;
+    top: 80%;
+}
+
+.add-recipe-button
+{
+    position: absolute;
+    width: 100px;
+    height: 100px;
     border: none;
+    font-size: 80px;
+    background: aqua;
     color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
 }
