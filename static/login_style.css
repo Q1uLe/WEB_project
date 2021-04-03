@@ -99,3 +99,8 @@ body
     margin-top: 0em;
     position: absolute
 }
+
+#username {
+    top: 30%
+    left: 40%
+}
