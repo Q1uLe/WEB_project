@@ -104,3 +104,27 @@ body
     top: 30%
     left: 40%
 }
+
+#login_username_field {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+}
+
+#login_password_field {
+    position: absolute;
+    top: 45%;
+    left: 40%;
+}
+#login_remember_me{
+    position: absolute;
+    top: 50%;
+    left: 40%;
+}
+
+#login_submit_btn{
+    position:absolute;
+    top: 55%;
+    left: 45%;
+    right: 45%;
+}
