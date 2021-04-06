@@ -97,5 +97,45 @@ body
 .login_form {
     display: block;
     margin-top: 0em;
-    position: absolute
+    position: absolute;
+}
+
+#email_field {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+}
+
+#password_field {
+    position: absolute;
+    top: 45%;
+    left: 40%;
+}
+
+#password_again_field {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+}
+
+#form_name {
+    position: absolute;
+    top: 55%;
+    left: 40%;
+}
+
+#about_form {
+    position: absolute;
+    top: 60%;
+    left: 40%;
+}
+
+#submit_btn {
+    position: absolute;
+    top: 75%;
+    left: 40%;
+}
+
+#about {
+    resize: none;
 }
