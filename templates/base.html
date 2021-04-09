@@ -11,9 +11,16 @@
                 <img src="/static/Diablo.jpg" width="100px" height="100px" class="logo" alt="logo">
             </div>
 
-            <div class="icon-image">
-                <img src="/static/Diablo.jpg" width="100px" height="100px" class="icon" alt="avatar">
-            </div>
+            {% if current_user.is_authenticated %}
+                <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+            {% else %}
+                <div class="btn-register">
+                    <a class="btn-register-txt" href="/register">Зарегистрироваться</a>
+                </div>
+                <div class="btn-login">
+                    <a class="btn-login-txt" href="/login">Войти</a>
+                </div>
+            {% endif %}
         </div>
     </div>
     {% block content %}{% endblock %}

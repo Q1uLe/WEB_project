@@ -139,3 +139,41 @@ body
 #about {
     resize: none;
 }
+
+.btn-register {
+    position: absolute;
+    background: black;
+    width: 130px;
+    height: 50px;
+    border: none;
+    font-size: 15px;
+    background: aqua;
+    color: white;
+    left: 92%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-login {
+    position: absolute;
+    width: 80px;
+    height: 50px;
+    border: none;
+    font-size: 15px;
+    background: aqua;
+    color: white;
+    left: 85%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-login-txt{
+    top: 45%;
+    left: 10%;
+    text-decoration: none;
+}
+
+.btn-register-txt{
+    top: 45%;
+    text-decoration: none;
+}

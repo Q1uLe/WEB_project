@@ -4,16 +4,21 @@ from forms.registerform import RegisterForm
 from data.User import User
 from data.Recipes import Recipes
 
+import logging
+
 from flask import Flask, render_template, redirect, request
 
-# from flask_login import LoginManager
+from flask_login import LoginManager, login_user, login_required, logout_user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
-# login_manager = LoginManager()
-# login_manager.init_app(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+#
+
+logging.basicConfig(filename='example.log')
 
 
 @app.route('/')
@@ -34,7 +39,15 @@ def new_recipe():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        return redirect('/')
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.name == form.username.data).first()
+        logging.info(msg=f'User.name: {User.name}; form.username.data: {form.username.data}')
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+        return render_template('login.html',
+                               message="Неправильный логин или пароль",
+                               form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
 
@@ -60,6 +73,18 @@ def reqister():
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', form=form)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    db_sess = db_session.create_session()
+    return db_sess.query(User).get(user_id)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 if __name__ == '__main__':
