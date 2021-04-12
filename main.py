@@ -8,7 +8,9 @@ import logging
 
 from flask import Flask, render_template, redirect, request
 
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -19,6 +21,8 @@ login_manager.init_app(app)
 #
 
 logging.basicConfig(filename='example.log')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 @app.route('/')
@@ -26,7 +30,9 @@ logging.basicConfig(filename='example.log')
 @app.route('/recipes/<page>')
 @app.route('/recipes/<page>/<request>')
 def index(page='', request=''):
-    param = {'page': page, 'request': request}
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.name == current_user.name).first()
+    param = {'page': page, 'request': request, 'pic_dir': f'{user.pic_dir}'}
     return render_template('index.html', **param)
 
 
@@ -41,7 +47,7 @@ def login():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.name == form.username.data).first()
-        logging.info(msg=f'User.name: {User.name}; form.username.data: {form.username.data}')
+        logging.info(f'User.name: {User.name}; form.username.data: {form.username.data}')
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")

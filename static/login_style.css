@@ -124,8 +124,8 @@ body
 
 #login_submit_btn{
     position:absolute;
-    top: 55%;
-    left: 45%;
+    top: 60%;
+    left: 40%;
     right: 45%;
 }
 
@@ -165,4 +165,19 @@ body
 .btn-register-txt{
     top: 45%;
     text-decoration: none;
+}
+
+#message{
+    position:absolute;
+    top: 55%;
+    left: 40%;
+    right: 45%;
+}
+
+#icon-logout{
+    position: absolute;
+    left: 95%;
+    top: 40%;
+    bottom: 40%;
+    transform: translate(-50%, -50%);
 }

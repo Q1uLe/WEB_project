@@ -12,7 +12,11 @@
             </div>
 
             {% if current_user.is_authenticated %}
-                <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+                <div class="icon-image">
+                    <a id="icon-logout" href="/logout">
+                        <img src={pic_dir} width="100px" height="100px" class="logo" alt="logo">
+                    </a>
+                </div>
             {% else %}
                 <div class="btn-register">
                     <a class="btn-register-txt" href="/register">Зарегистрироваться</a>
