@@ -48,15 +48,7 @@
                 </p>
             {% endfor %}
         </p>
-        <p id="ico_pic_file">
-            {{ form.icon_image(class="form-control") }}<br>
-            {% for error in form.icon_image.errors %}
-            {% for error in form.icon_image.errors %}
-                <p class="alert alert-danger" role="alert">
-                    {{ error }}
-                </p>
-            {% endfor %}</p>
         <p id="submit_btn">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
         {{message}}
     </form>
-{% endblock %}
+{%endblock%}

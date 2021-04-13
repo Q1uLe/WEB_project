@@ -6,7 +6,7 @@ from data.Recipes import Recipes
 
 import logging
 
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, g
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
@@ -30,9 +30,7 @@ logger.setLevel(logging.INFO)
 @app.route('/recipes/<page>')
 @app.route('/recipes/<page>/<request>')
 def index(page='', request=''):
-    db_sess = db_session.create_session()
-    user = db_sess.query(User).filter(User.name == current_user.name).first()
-    param = {'page': page, 'request': request, 'pic_dir': f'{user.pic_dir}'}
+    param = {'page': page, 'request': request}
     return render_template('index.html', **param)
 
 
@@ -42,7 +40,10 @@ def new_recipe():
 
 
 @app.route('/login', methods=['GET', 'POST'])
+# @app.after_request
 def login():
+    if current_user.is_authenticated:
+        return redirect('/')
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -59,6 +60,8 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
+    if current_user.is_authenticated:
+        return redirect('/')
     form = RegisterForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
