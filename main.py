@@ -31,6 +31,8 @@ logger.setLevel(logging.INFO)
 @app.route('/recipes/<page>/<request>')
 def index(page='', request=''):
     param = {'page': page, 'request': request}
+    if current_user.is_authenticated:
+        param['user_name'] = current_user.name
     return render_template('index.html', **param)
 
 

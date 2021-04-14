@@ -167,19 +167,34 @@ body
     transform: translate(-50%, -50%);
 }
 
-.btn-login-txt{
-    top: 45%;
-    left: 10%;
+.btn-txt{
+    margin-left: auto;
+    margin-right: auto;
     text-decoration: none;
 }
 
-.btn-register-txt{
-    top: 45%;
-    text-decoration: none;
-}
-
-#ico_pic_file{
+.logout-btn {
     position: absolute;
-    top: 70%;
-    left: 40%;
+    background: black;
+    width: 130px;
+    height: 50px;
+    border: none;
+    font-size: 15px;
+    background: aqua;
+    color: white;
+    left: 92%;
+    top: 40%;
+    transform: translate(-50%, -50%);
 }
+
+.user-nickname{
+    position: absolute;
+    width: 80px;
+    height: 50px;
+    border: none;
+    font-size: 15px;
+    background: aqua;
+    left: 85%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    }

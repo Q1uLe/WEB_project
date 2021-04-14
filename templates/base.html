@@ -12,17 +12,18 @@
             </div>
 
             {% if current_user.is_authenticated %}
-                <div class="icon-image">
-                    <a id="icon-logout" href="/logout">
-                        <img src={pic_dir} width="100px" height="100px" class="logo" alt="logo">
-                    </a>
+                <div class="user-nickname">
+                    <a class="user-nickname-txt">{{user_name}}</a>
+                </div>
+                <div class="logout-btn">
+                    <a class="btn-txt" href="/logout">Выйти</a>
                 </div>
             {% else %}
                 <div class="btn-register">
-                    <a class="btn-register-txt" href="/register">Зарегистрироваться</a>
+                    <a class="btn-txt" href="/register">Зарегистрироваться</a>
                 </div>
                 <div class="btn-login">
-                    <a class="btn-login-txt" href="/login">Войти</a>
+                    <a class="btn-txt" href="/login">Войти</a>
                 </div>
             {% endif %}
         </div>
