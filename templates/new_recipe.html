@@ -1,2 +1,25 @@
 {% extends "base.html" %}
 {% block style %} <link rel="stylesheet" href="./static/style.css" type="text/css"> {% endblock %}
+{% block content %}
+<form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p id="new-recipe-name">
+            {{ form.recipe_name.label }}<br>
+            {{ form.recipe_name(class="form-control") }}<br>
+            {% for error in form.recipe_name.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+        <p id="recipe">
+            {{ form.recipe.label }}<br>
+            {{ form.recipe(class="form-control") }}<br>
+            {% for error in form.recipe.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+    </form>
+{% endblock %}

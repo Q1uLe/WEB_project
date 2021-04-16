@@ -1,6 +1,7 @@
 from data import db_session
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
+from forms.newrecipeform import NewRecipeForm
 from data.User import User
 from data.Recipes import Recipes
 
@@ -36,8 +37,18 @@ def index(page='', request=''):
     return render_template('index.html', **param)
 
 
-@app.route('/new_recipe')
+@app.route('/new_recipe', methods=['GET', 'POST'])
 def new_recipe():
+    form = NewRecipeForm
+    if form.validate_on_submit() and current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        recipe = Recipes()
+        recipe.title = form.recipe_name.data
+        recipe.recipe = form.recipe.data
+        recipe.user_id = db_sess.query(User).filter(User.name == current_user.name).first()
+        db_sess.add(recipe)
+        db_sess.commit()
+
     return render_template('new_recipe.html')
 
 
