@@ -21,5 +21,14 @@
                 </p>
             {% endfor %}
         </p>
+        <p id="ingredients">
+            {{ form.ingredients.label }}
+            {{ form.ingredients(class="form-control") }}<br>
+            {% for error in form.ingredients.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+
+        </p>
     </form>
 {% endblock %}
