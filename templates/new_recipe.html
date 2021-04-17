@@ -3,31 +3,32 @@
 {% block content %}
 <form action="" method="post">
         {{ form.hidden_tag() }}
-        <p id="new-recipe-name">
-            {{ form.recipe_name.label }}<br>
-            {{ form.recipe_name(class="form-control") }}<br>
+        <p>
+            {{ form.recipe_name.label(class='new-recipe-name-label')}}<br>
+            {{ form.recipe_name(class="new-recipe-name") }}<br>
             {% for error in form.recipe_name.errors %}
                 <p class="alert alert-danger" role="alert">
                     {{ error }}
                 </p>
             {% endfor %}
         </p>
-        <p id="recipe">
-            {{ form.recipe.label }}<br>
-            {{ form.recipe(class="form-control") }}<br>
+        <p>
+            {{ form.recipe.label(class='recipe-label')}}<br>
+            {{ form.recipe(class="recipe") }}<br>
             {% for error in form.recipe.errors %}
                 <p class="alert alert-danger" role="alert">
                     {{ error }}
                 </p>
             {% endfor %}
         </p>
-        <p id="ingredients">
-            {{ form.ingredients.label }}
-            {{ form.ingredients(class="form-control") }}<br>
+        <p>
+            {{ form.ingredients.label(class='ingredients-label')}}
+            {{ form.ingredients(class="ingredients") }}<br>
             {% for error in form.ingredients.errors %}
                 <p class="alert alert-danger" role="alert">
                     {{ error }}
                 </p>
+            {% endfor %}
 
         </p>
     </form>

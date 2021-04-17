@@ -39,21 +39,21 @@ def index(page='', request=''):
 
 @app.route('/new_recipe', methods=['GET', 'POST'])
 def new_recipe():
-    form = NewRecipeForm
-    if form.validate_on_submit() and current_user.is_authenticated:
-        db_sess = db_session.create_session()
-        recipe_obj = Recipes()
-        recipe_obj.title = form.recipe_name.data
-        recipe_obj.recipe = form.recipe.data
-        recipe_obj.user_id = db_sess.query(User).filter(User.name == current_user.name).first()
-        db_sess.add(recipe_obj)
-        db_sess.commit()
-
-    return render_template('new_recipe.html')
+    form = NewRecipeForm()
+    if form.validate_on_submit():
+        if current_user.is_authenticated():
+            db_sess = db_session.create_session()
+            recipe_obj = Recipes()
+            recipe_obj.title = form.recipe_name.data
+            recipe_obj.recipe = form.recipe.data
+            recipe_obj.user_id = db_sess.query(User).filter(User.name == current_user.name).first()
+            db_sess.add(recipe_obj)
+            db_sess.commit()
+    return render_template('new_recipe.html', user_name=current_user.name, form=form)
 
 
 @app.route('/recipe', methods=['GET', 'POST'])
-@app.route('/recipe/<recipe>', methods=['GET', 'POST'])
+@app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 def recipe(recipe_id=''):
     if recipe_id == '':
         return redirect('/')
