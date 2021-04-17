@@ -4,8 +4,8 @@
 <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.recipe_name.label(class='new-recipe-name-label')}}<br>
-            {{ form.recipe_name(class="new-recipe-name") }}<br>
+            {{ form.recipe_name.label(id='recipe_name_label')}}<br>
+            {{ form.recipe_name }}<br>
             {% for error in form.recipe_name.errors %}
                 <p class="alert alert-danger" role="alert">
                     {{ error }}
@@ -13,8 +13,8 @@
             {% endfor %}
         </p>
         <p>
-            {{ form.recipe.label(class='recipe-label')}}<br>
-            {{ form.recipe(class="recipe") }}<br>
+            {{ form.recipe.label(id='recipe_label')}}<br>
+            {{ form.recipe }}<br>
             {% for error in form.recipe.errors %}
                 <p class="alert alert-danger" role="alert">
                     {{ error }}
@@ -22,14 +22,14 @@
             {% endfor %}
         </p>
         <p>
-            {{ form.ingredients.label(class='ingredients-label')}}
-            {{ form.ingredients(class="ingredients") }}<br>
+            {{ form.ingredients.label(id='ingredients_label')}}
+            {{ form.ingredients }}<br>
             {% for error in form.ingredients.errors %}
                 <p class="alert alert-danger" role="alert">
                     {{ error }}
                 </p>
             {% endfor %}
-
         </p>
+        <p id="new_recipe_submit_btn">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     </form>
 {% endblock %}

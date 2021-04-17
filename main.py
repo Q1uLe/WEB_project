@@ -31,7 +31,9 @@ logger.setLevel(logging.INFO)
 @app.route('/recipes/<page>')
 @app.route('/recipes/<page>/<request>')
 def index(page='', request=''):
-    param = {'page': page, 'request': request}
+    param = {}
+    db_sess = db_session.create_session()
+    recipes = db_sess.query(Recipes).filter(Recipes.title.like(f'%{request}%'))
     if current_user.is_authenticated:
         param['user_name'] = current_user.name
     return render_template('index.html', **param)
@@ -39,17 +41,21 @@ def index(page='', request=''):
 
 @app.route('/new_recipe', methods=['GET', 'POST'])
 def new_recipe():
-    form = NewRecipeForm()
-    if form.validate_on_submit():
-        if current_user.is_authenticated():
-            db_sess = db_session.create_session()
-            recipe_obj = Recipes()
-            recipe_obj.title = form.recipe_name.data
-            recipe_obj.recipe = form.recipe.data
-            recipe_obj.user_id = db_sess.query(User).filter(User.name == current_user.name).first()
-            db_sess.add(recipe_obj)
-            db_sess.commit()
-    return render_template('new_recipe.html', user_name=current_user.name, form=form)
+    if current_user.is_authenticated:
+        form = NewRecipeForm()
+        if form.validate_on_submit():
+            if current_user.is_authenticated:
+                db_sess = db_session.create_session()
+                recipe_obj = Recipes()
+                recipe_obj.title = form.recipe_name.data
+                recipe_obj.recipe = form.recipe.data
+                recipe_obj.ingredients = form.ingredients.data
+                recipe_obj.user_id = db_sess.query(User).filter(User.name == current_user.name).first().id
+                db_sess.add(recipe_obj)
+                db_sess.commit()
+                return redirect('/')
+        return render_template('new_recipe.html', user_name=current_user.name, form=form)
+    return redirect('/login')
 
 
 @app.route('/recipe', methods=['GET', 'POST'])
