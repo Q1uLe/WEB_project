@@ -34,8 +34,15 @@ def index(page='', request=''):
     param = {}
     db_sess = db_session.create_session()
     recipes = db_sess.query(Recipes).filter(Recipes.title.like(f'%{request}%'))
+    recipes = recipes.limit(10)
+    if page.isdigit():
+        recipes = recipes.offset(int(page) * 10)
+    recipes = recipes.all()
+    print(recipes)
     if current_user.is_authenticated:
         param['user_name'] = current_user.name
+    param['recipes'] = recipes
+    # param['counter'] = 0
     return render_template('index.html', **param)
 
 
