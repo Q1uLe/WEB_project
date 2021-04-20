@@ -7,7 +7,7 @@ from data.Recipes import Recipes
 
 import logging
 
-from flask import Flask, render_template, redirect, g
+from flask import Flask, render_template, redirect, request
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
@@ -27,22 +27,28 @@ logger.setLevel(logging.INFO)
 
 
 @app.route('/')
+def just_slash():
+    return redirect('/recipes')
+
+
 @app.route('/recipes')
 @app.route('/recipes/<page>')
-@app.route('/recipes/<page>/<request>')
-def index(page='', request=''):
+@app.route('/recipes/<page>/<page_request>')
+def index(page=0, page_request=''):
     param = {}
-    db_sess = db_session.create_session()
-    recipes = db_sess.query(Recipes).filter(Recipes.title.like(f'%{request}%'))
-    recipes = recipes.limit(10)
-    if page.isdigit():
-        recipes = recipes.offset(int(page) * 10)
-    recipes = recipes.all()
-    print(recipes)
+    print(request)
     if current_user.is_authenticated:
         param['user_name'] = current_user.name
+    db_sess = db_session.create_session()
+    recipes = db_sess.query(Recipes).filter(Recipes.title.like(f'%{page_request}%'))
+    recipes = recipes.limit(10)
+    recipes = recipes.offset(int(page) * 10)
+    recipes = recipes.all()
     param['recipes'] = recipes
-    # param['counter'] = 0
+    param['counter'] = 0
+    param['page'] = int(page)
+    if page_request != '':
+        param['page_request'] = '/' + page_request
     return render_template('index.html', **param)
 
 

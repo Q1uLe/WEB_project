@@ -1,14 +1,24 @@
 {% extends "base.html" %}
-{% block style %} <link rel="stylesheet" href="./static/style.css" type="text/css"> {% endblock %}
+{% block style %} <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}"> {% endblock %}
 {% block content %} <div class="global-content-page">
         <div class="content-page">
-            {% set test = namespace(counter=0) %}
+            {% set test = namespace(counter=5) %}
             {% for item in recipes %}
             <div class="recipe-title" style="top:{{ test.counter }}%">
                 <a href="/recipe/{{item.id}}">{{item.title}}</a>
             </div>
-            {% set test.counter = test.counter + 6 %}
+            {% set test.counter = test.counter + 4 %}
             {% endfor %}
+        </div>
+        <div class="right-btn">
+            <button class="right-button" onclick="location.href='/recipes/{{ page + 1 }}{{ page_request}}'">
+                ==>
+            </button>
+        </div>
+        <div class="left-btn">
+            <button class="right-button" onclick="location.href='/recipes/{{ page - 1 }}{{ page_request}}'">
+                <==
+            </button>
         </div>
     </div>
 {% endblock %}
