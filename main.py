@@ -36,17 +36,18 @@ def just_slash():
 @app.route('/recipes/<page>/<page_request>')
 def index(page=0, page_request=''):
     param = {}
-    print(request)
     if current_user.is_authenticated:
         param['user_name'] = current_user.name
     db_sess = db_session.create_session()
     recipes = db_sess.query(Recipes).filter(Recipes.title.like(f'%{page_request}%'))
+    page_count = recipes.count() / 10
     recipes = recipes.limit(10)
     recipes = recipes.offset(int(page) * 10)
     recipes = recipes.all()
     param['recipes'] = recipes
     param['counter'] = 0
     param['page'] = int(page)
+    param['page_count'] = page_count
     if page_request != '':
         param['page_request'] = '/' + page_request
     return render_template('index.html', **param)
@@ -75,12 +76,19 @@ def new_recipe():
 @app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 def recipe(recipe_id=''):
     if recipe_id == '':
-        return redirect('/')
-    return render_template('recipe.html')
+        return redirect('/recipes')
+    param = {}
+    if current_user.is_authenticated:
+        param['user_name'] = current_user.name
+    db_sess = db_session.create_session()
+    recipe_obj = db_sess.query(Recipes).filter(Recipes.id.like(recipe_id)).first()
+    param['recipe_name'] = recipe_obj.title
+    param['ingredients'] = recipe_obj.ingredients
+    param['recipe'] = recipe_obj.recipe
+    return render_template('recipe.html', **param)
 
 
 @app.route('/login', methods=['GET', 'POST'])
-# @app.after_request
 def login():
     if current_user.is_authenticated:
         return redirect('/')
@@ -128,6 +136,7 @@ def reqister():
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
+
 
 @app.route('/logout')
 @login_required

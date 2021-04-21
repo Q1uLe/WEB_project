@@ -1,2 +1,15 @@
 {% extends "base.html" %}
-{% block style %} <link rel="stylesheet" href="./static/style.css" type="text/css"> {% endblock %}
+{% block style %} <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}" type="text/css"> {% endblock %}
+{% block content %}
+<div class="content-page">
+    <p id="recipe-recipe-name">
+        {{recipe_name}}
+    </p>
+    <p id="recipe-ingredients">
+        {{ingredients}}
+    </p>
+    <p id="recipe-recipe">
+        {{recipe}}
+    </p>
+</div>
+{% endblock %}

@@ -8,13 +8,8 @@
     <div class="menu-bar">
         <div class="menu">
             <div class="logo-image">
-                <img src="/static/Diablo.jpg" width="100px" height="100px" class="logo" alt="logo">
+                <a href="/"><img src="/static/Diablo.jpg" width="100px" height="100px" class="logo" alt="logo"></a>
             </div>
-            <textarea class="request-txt-area"></textarea>
-            <button id="request-go-btn" hidden>
-                <label id="request-go-btn-label" for="request-go">Поиск</label>
-            </button>
-            <input type="button" id="request-go">
 
             {% if current_user.is_authenticated %}
                 <div class="user-nickname">
