@@ -159,8 +159,13 @@ def logout():
 
 
 @app.errorhandler(404)
-def error_404():
-    return make_response(jsonify({'error': 'Not found'}), 404)
+def error_404(message):
+    return make_response(jsonify(
+        {
+            'error': 'Not found',
+            'message': str(message)
+        }
+                                 ), 404)
 
 
 @app.route('/page_not_found')
