@@ -4,8 +4,10 @@ from sqlalchemy import orm
 
 from .db_session import SqlAlchemyBase
 
+from sqlalchemy_serializer import SerializerMixin
 
-class Recipes(SqlAlchemyBase):
+
+class Recipes(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'recipes'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,

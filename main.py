@@ -1,25 +1,27 @@
-from data import db_session
+from data import db_session, rec_api
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
 from forms.newrecipeform import NewRecipeForm
 from data.User import User
 from data.Recipes import Recipes
+from data import recipe_recources
+
+from flask_restful import Api
 
 import logging
 
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, url_for, make_response, jsonify
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-import os
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['JSON_AS_ASCII'] = False
 
+api = Api(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-#
 
 logging.basicConfig(filename='example.log')
 logger = logging.getLogger(__name__)
@@ -31,16 +33,24 @@ def just_slash():
     return redirect('/recipes')
 
 
-@app.route('/recipes')
-@app.route('/recipes/<page>')
-@app.route('/recipes/<page>/<page_request>')
+# Главная страница
+@app.route('/recipes', methods=['GET', 'POST'])
+@app.route('/recipes/', methods=['GET', 'POST'])
+@app.route('/recipes/<page>', methods=['GET', 'POST'])
+@app.route('/recipes/<page>/', methods=['GET', 'POST'])
+@app.route('/recipes/<page>/<page_request>', methods=['GET', 'POST'])
 def index(page=0, page_request=''):
     param = {}
     if current_user.is_authenticated:
         param['user_name'] = current_user.name
+    if request.method == 'POST':
+        empty_string = request.form['request-text-area']
+        return redirect(url_for('submit', req=empty_string, page=page))
     db_sess = db_session.create_session()
     recipes = db_sess.query(Recipes).filter(Recipes.title.like(f'%{page_request}%'))
     page_count = recipes.count() / 10
+    if int(page) > page_count or int(page) < 0 or recipes.count() == 0:
+        return redirect('/page_not_found')
     recipes = recipes.limit(10)
     recipes = recipes.offset(int(page) * 10)
     recipes = recipes.all()
@@ -48,9 +58,12 @@ def index(page=0, page_request=''):
     param['counter'] = 0
     param['page'] = int(page)
     param['page_count'] = page_count
-    if page_request != '':
-        param['page_request'] = '/' + page_request
     return render_template('index.html', **param)
+
+
+@app.route('/recipes/<page>/<req>', methods=['POST'])
+def submit(page=0, req=''):
+    return redirect(f'/recipes/0/{req}')
 
 
 @app.route('/new_recipe', methods=['GET', 'POST'])
@@ -145,6 +158,18 @@ def logout():
     return redirect("/")
 
 
+@app.errorhandler(404)
+def error_404():
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.route('/page_not_found')
+def page_not_found():
+    return render_template('page_not_found.html')
+
+
 if __name__ == '__main__':
     db_session.global_init("db/recipes.db")
+    api.add_resource(recipe_recources.RecipeListResource, '/api/recipe')
+    api.add_resource(recipe_recources.RecipeResource, '/api/recipe/<recipe_id>')
     app.run()
