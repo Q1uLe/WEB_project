@@ -7,7 +7,7 @@ from flask_restful import abort
 
 class RecipeResource(Resource):
     def get(self, recipe_id):
-        abort_if_news_not_found(recipe_id)
+        abort_if_recipe_not_found(recipe_id)
         session = db_session.create_session()
         recipe = session.query(Recipes).get(recipe_id)
         return jsonify({'recipes': recipe.to_dict(
@@ -22,7 +22,7 @@ class RecipeListResource(Resource):
             only=('title', 'ingredients', 'recipe', 'user.name')) for item in recipe]})
 
 
-def abort_if_news_not_found(recipe_id):
+def abort_if_recipe_not_found(recipe_id):
     session = db_session.create_session()
     news = session.query(Recipes).get(recipe_id)
     if not news:

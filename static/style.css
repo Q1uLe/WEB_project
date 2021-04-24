@@ -407,3 +407,9 @@ body
     left: 5%;
     top: 15%;
 }
+
+#page-not-found-error{
+    position:absolute;
+    left: 30%;
+    top: 20%;
+}

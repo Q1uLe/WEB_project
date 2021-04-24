@@ -6,13 +6,15 @@ from data.User import User
 from data.Recipes import Recipes
 from data import recipe_recources
 
-from flask_restful import Api
+from flask_restful import Api, abort
 
 import logging
 
 from flask import Flask, render_template, redirect, request, url_for, make_response, jsonify
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+
+from pprint import pprint
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -45,19 +47,27 @@ def index(page=0, page_request=''):
         param['user_name'] = current_user.name
     if request.method == 'POST':
         empty_string = request.form['request-text-area']
-        return redirect(url_for('submit', req=empty_string, page=page))
+        return redirect(url_for('submit', req=empty_string, page=0))
     db_sess = db_session.create_session()
-    recipes = db_sess.query(Recipes).filter(Recipes.title.like(f'%{page_request}%'))
-    page_count = recipes.count() / 10
-    if int(page) > page_count or int(page) < 0 or recipes.count() == 0:
-        return redirect('/page_not_found')
-    recipes = recipes.limit(10)
-    recipes = recipes.offset(int(page) * 10)
-    recipes = recipes.all()
+    recipes_query = db_sess.query(Recipes).filter(Recipes.title.like(f'%{page_request}%'))
+
+    global_recipe_count = recipes_query.count()
+
+    recipes_query = recipes_query.limit(10)
+    recipes_query = recipes_query.offset(int(page) * 10)
+    recipes = recipes_query.all()
+
+    if len(recipes) == 0:
+        abort(404, is_api=False)
+
+    # Параметры для кнопок и для редиректов
     param['recipes'] = recipes
-    param['counter'] = 0
-    param['page'] = int(page)
-    param['page_count'] = page_count
+    # Для корректного отображения кнопок
+    param['page'] = int(page) * 10
+    # для перехода на след стр с сохранением поискового запроса
+    param['page_request'] = page_request
+    param['recipe_count'] = global_recipe_count
+    # pprint(param)
     return render_template('index.html', **param)
 
 
@@ -86,10 +96,14 @@ def new_recipe():
 
 
 @app.route('/recipe', methods=['GET', 'POST'])
+@app.route('/recipe/', methods=['GET', 'POST'])
 @app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 def recipe(recipe_id=''):
     if recipe_id == '':
         return redirect('/recipes')
+    if not recipe_id.isdigit():
+        abort(404, is_api=False)
+    abort_if_recipe_not_found(recipe_id)
     param = {}
     if current_user.is_authenticated:
         param['user_name'] = current_user.name
@@ -159,7 +173,9 @@ def logout():
 
 
 @app.errorhandler(404)
-def error_404(message):
+def error_404(message='', is_api=True):
+    if not is_api:
+        return redirect('/page_not_found')
     return make_response(jsonify(
         {
             'error': 'Not found',
@@ -169,12 +185,19 @@ def error_404(message):
 
 
 @app.route('/page_not_found')
-def page_not_found():
-    return render_template('page_not_found.html')
+def page_not_found(**some_params):
+    return render_template('page_not_found.html', **some_params)
+
+
+def abort_if_recipe_not_found(recipe_id):
+    session = db_session.create_session()
+    news = session.query(Recipes).get(recipe_id)
+    if not news:
+        abort(404, message=f"Recipe {recipe_id} not found")
 
 
 if __name__ == '__main__':
     db_session.global_init("db/recipes.db")
     api.add_resource(recipe_recources.RecipeListResource, '/api/recipe')
-    api.add_resource(recipe_recources.RecipeResource, '/api/recipe/<recipe_id>')
+    api.add_resource(recipe_recources.RecipeResource, '/api/recipe/by_id/<recipe_id>')
     app.run()

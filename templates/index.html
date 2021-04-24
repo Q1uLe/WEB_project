@@ -17,16 +17,16 @@
         </button>
         <input type="button" id="request-go">
         </form>
-        {% if page_count > page + 1 %}
+        {% if recipe_count / 10 > page + 1 %}
         <div class="right-btn">
-            <button class="right-button" onclick="location.href='/recipes/{{ page + 1 }}{{ page_request}}'">
+            <button class="right-button" onclick="location.href='/recipes/{{ page // 10 + 1  }}/{{ page_request}}'">
                 ==>
             </button>
         </div>
         {% endif %}
         {% if page != 0 %}
             <div class="left-btn">
-                <button class="right-button" onclick="location.href='/recipes/{{ page - 1 }}{{ page_request}}'">
+                <button class="right-button" onclick="location.href='/recipes/{{ page // 10 - 1 }}/{{ page_request}}'">
                     <==
                 </button>
             </div>
