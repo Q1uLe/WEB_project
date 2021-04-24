@@ -1,4 +1,4 @@
-from data import db_session, rec_api
+from data import db_session
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
 from forms.newrecipeform import NewRecipeForm
@@ -42,6 +42,12 @@ def just_slash():
 @app.route('/recipes/<page>/', methods=['GET', 'POST'])
 @app.route('/recipes/<page>/<page_request>', methods=['GET', 'POST'])
 def index(page=0, page_request=''):
+    """
+    Проверяет авторизацию пользователя тип запроса, далее выводит 10 первых рецептов
+    :param page:
+    :param page_request:
+    :return:
+    """
     param = {}
     if current_user.is_authenticated:
         param['user_name'] = current_user.name
@@ -71,11 +77,13 @@ def index(page=0, page_request=''):
     return render_template('index.html', **param)
 
 
+# Реализует поиск
 @app.route('/recipes/<page>/<req>', methods=['POST'])
 def submit(page=0, req=''):
     return redirect(f'/recipes/0/{req}')
 
 
+# страница создания нового рецепта
 @app.route('/new_recipe', methods=['GET', 'POST'])
 def new_recipe():
     if current_user.is_authenticated:
@@ -95,6 +103,7 @@ def new_recipe():
     return redirect('/login')
 
 
+#
 @app.route('/recipe', methods=['GET', 'POST'])
 @app.route('/recipe/', methods=['GET', 'POST'])
 @app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
