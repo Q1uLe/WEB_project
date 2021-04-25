@@ -63,8 +63,8 @@ def index(page=0, page_request=''):
     recipes_query = recipes_query.offset(int(page) * 10)
     recipes = recipes_query.all()
 
-    if len(recipes) == 0:
-        abort(404, is_api=False)
+    if int(page) < 0 or len(recipes) == 0:
+        abort(404)
 
     # Параметры для кнопок и для редиректов
     param['recipes'] = recipes
@@ -73,7 +73,6 @@ def index(page=0, page_request=''):
     # для перехода на след стр с сохранением поискового запроса
     param['page_request'] = page_request
     param['recipe_count'] = global_recipe_count
-    # pprint(param)
     return render_template('index.html', **param)
 
 
@@ -111,7 +110,7 @@ def recipe(recipe_id=''):
     if recipe_id == '':
         return redirect('/recipes')
     if not recipe_id.isdigit():
-        abort(404, is_api=False)
+        abort(404)
     abort_if_recipe_not_found(recipe_id)
     param = {}
     if current_user.is_authenticated:
@@ -143,7 +142,7 @@ def login():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def reqister():
+def register():
     if current_user.is_authenticated:
         return redirect('/')
     form = RegisterForm()
@@ -168,6 +167,14 @@ def reqister():
     return render_template('register.html', form=form)
 
 
+@app.route('/page_not_found')
+def page_not_found():
+    param = {}
+    if current_user.is_authenticated:
+        param['user_name'] = current_user.name
+    return render_template('page_not_found.html', **param)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
@@ -182,27 +189,15 @@ def logout():
 
 
 @app.errorhandler(404)
-def error_404(message='', is_api=True):
-    if not is_api:
-        return redirect('/page_not_found')
-    return make_response(jsonify(
-        {
-            'error': 'Not found',
-            'message': str(message)
-        }
-                                 ), 404)
-
-
-@app.route('/page_not_found')
-def page_not_found(**some_params):
-    return render_template('page_not_found.html', **some_params)
+def error_404(message=''):
+    return redirect('/page_not_found')
 
 
 def abort_if_recipe_not_found(recipe_id):
     session = db_session.create_session()
     news = session.query(Recipes).get(recipe_id)
     if not news:
-        abort(404, message=f"Recipe {recipe_id} not found")
+        abort(404)
 
 
 if __name__ == '__main__':
