@@ -1,3 +1,5 @@
+import os
+
 from data import db_session
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
@@ -201,7 +203,8 @@ def abort_if_recipe_not_found(recipe_id):
 
 
 if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
     db_session.global_init("db/recipes.db")
     api.add_resource(recipe_recources.RecipeListResource, '/api/recipe')
     api.add_resource(recipe_recources.RecipeResource, '/api/recipe/by_id/<recipe_id>')
-    app.run()
+    app.run(host='0.0.0.0', port=port)
